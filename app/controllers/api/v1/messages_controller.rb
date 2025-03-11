@@ -45,16 +45,14 @@ class Api::V1::MessagesController < ApplicationController
       when "me"
         message.update!(deleted_for_sender: true)
       when "permanent"
-        message.destroy!
-        return render json: { status: "deleted" }, status: :ok
+        message.destroy! 
+        return head :no_content
       end
     else
       message.update!(deleted_for_receiver: true)
     end
   
     render json: message.reload
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "Mensagem não encontrada" }, status: :not_found
   end
 
   def restore
